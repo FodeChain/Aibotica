@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <title>用户 {{ username }} 的聊天</title>
+    <style>
+        body { margin:0; font-family: Arial, sans-serif; display: flex; height: 100vh; }
+        #sidebar {
+            width: 220px;
+            background: #f0f0f0;
+            border-right: 1px solid #ccc;
+            padding: 10px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+        #sidebar h3 { margin-top: 0; }
+        #sidebar form { margin-bottom: 10px; }
+        #sidebar ul { list-style:none; padding-left: 0; }
+        #sidebar li {
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-bottom: 4px;
+            background-color: #ddd;
+        }
+        #sidebar li.selected {
+            background-color: #4CAF50;
+            color: white;
+        }
+        #main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        #chat-window {
+            flex-grow: 1;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #fff;
+        }
+        .message {
+            margin-bottom: 12px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            max-width: 70%;
+            clear: both;
+        }
+        .user-msg {
+            background-color: #DCF8C6;
+            float: right;
+            text-align: right;
+        }
+        .bot-msg {
+            background-color: #eee;
+            float: left;
+            text-align: left;
+        }
+        #input-area {
+            display: flex;
+        }
+        #input-area textarea {
+            flex-grow: 1;
+            resize: none;
+            height: 50px;
+            padding: 8px;
+            font-size: 14px;
+        }
+        #input-area button {
+            width: 80px;
+            margin-left: 8px;
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        #input-area button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div id="sidebar">
+        <h3>对话列表</h3>
+        <form method="POST" action="{{ url_for('dashboard') }}">
+            <button type="submit" name="new_chat">新对话</button>
+        </form>
+        <ul>
+            {% for chat in chats %}
+            <li class="{{ 'selected' if chat['id'] == current_chat_id else '' }}">
+                <a href="{{ url_for('dashboard', chat_id=chat['id']) }}" style="text-decoration:none; color: inherit;">
+                    对话 {{ loop.index }}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div id="main">
+        <div id="chat-window">
+            {% for message in messages %}
+                {% if message['is_user'] %}
+                    <div class="message user-msg">{{ message['content'] }}</div>
+                {% else %}
+                    <div class="message bot-msg">{{ message['content'] }}</div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <form id="input-area" method="POST" action="{{ url_for('dashboard', chat_id=current_chat_id) }}">
+            <textarea name="user_input" placeholder="输入消息..." required></textarea>
+            <button type="submit">发送</button>
+        </form>
+    </div>
+</body>
+</html>

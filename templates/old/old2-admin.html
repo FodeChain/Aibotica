@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <title>管理员页面</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>管理员后台</h1>
+      <a href="{{ url_for('logout') }}" class="logout">退出登录</a>
+    </header>
+
+    <main>
+      {% for username, conversations in user_conversations.items() %}
+        <section class="user-block">
+          <h2>👤 用户：{{ username }}</h2>
+          {% if conversations %}
+            {% for conv in conversations %}
+              <div class="conversation">
+                <h3>💬 {{ conv.conversation }}</h3>
+                {% if conv.texts %}
+                  <ul class="message-list">
+                    {% for t in conv.texts %}
+                      <li>
+                        <span class="timestamp">{{ t.timestamp }}</span>
+                        <span class="content">{{ t.content }}</span>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                {% else %}
+                  <p class="no-record">无记录</p>
+                {% endif %}
+              </div>
+            {% endfor %}
+          {% else %}
+            <p class="no-conversation">无对话记录</p>
+          {% endif %}
+        </section>
+      {% endfor %}
+    </main>
+  </div>
+</body>
+</html>

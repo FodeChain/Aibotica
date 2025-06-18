@@ -1,0 +1,84 @@
+<!-- templates/dashboard.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>对话页面</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f4f6;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 60%;
+            margin: 50px auto;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        .chat-box {
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        .message {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 6px;
+            width: fit-content;
+            max-width: 80%;
+        }
+        .user {
+            background-color: #dcfce7;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+        .bot {
+            background-color: #e0e7ff;
+            align-self: flex-start;
+            margin-right: auto;
+        }
+        .chat-wrapper {
+            display: flex;
+            flex-direction: column;
+        }
+        .generate-btn {
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .logout {
+            margin-top: 20px;
+            display: inline-block;
+            color: #ef4444;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>欢迎，{{ username }}</h2>
+        <div class="chat-box chat-wrapper">
+            {% for text in texts %}
+                <div class="message user">你：我想生成一些内容</div>
+                <div class="message bot">系统：{{ text['content'] }}</div>
+            {% endfor %}
+        </div>
+
+        <form method="POST">
+            <button class="generate-btn" type="submit">生成一句话</button>
+        </form>
+
+        <a href="{{ url_for('logout') }}" class="logout">退出登录</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,158 @@
+/* 通用布局样式 */
+body {
+  margin: 0;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background-color: #343541;
+  color: white;
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* 总体布局分为 sidebar 和 main 区域 */
+.layout {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+/* 左侧侧边栏 */
+.sidebar {
+  width: 240px;
+  background-color: #202123;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.sidebar h2 {
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.sidebar button {
+  background-color: #444654;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  text-align: center;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.sidebar button:hover {
+  background-color: #565869;
+}
+
+.chat-list {
+  flex-grow: 1;
+  overflow-y: auto;
+  margin-top: 10px;
+}
+
+.chat-item {
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-bottom: 6px;
+  cursor: pointer;
+  color: #ccc;
+  text-decoration: none;
+  display: block;
+}
+
+.chat-item:hover {
+  background-color: #333;
+  color: white;
+}
+
+.chat-item.active {
+  background-color: #10a37f;
+  color: white;
+  font-weight: bold;
+}
+
+/* 右侧聊天主界面 */
+.main {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #343541;
+  padding: 20px;
+  overflow: hidden;
+}
+
+/* 聊天内容区域 */
+.chat-box {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding-right: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 聊天气泡样式 */
+.bubble {
+  max-width: 80%;
+  padding: 12px 16px;
+  margin: 8px 0;
+  border-radius: 16px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.user-msg {
+  align-self: flex-end;
+  background-color: #10a37f;
+  color: white;
+}
+
+.bot-msg {
+  align-self: flex-start;
+  background-color: #444654;
+  color: white;
+}
+
+/* 输入框区域 */
+.input-area {
+  display: flex;
+  margin-top: 20px;
+  border-top: 1px solid #555;
+  padding-top: 10px;
+}
+
+.input-area input[type="text"] {
+  flex-grow: 1;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  background-color: #40414f;
+  color: white;
+  outline: none;
+}
+
+.input-area input[type="text"]::placeholder {
+  color: #888;
+}
+
+.input-area button {
+  background-color: #10a37f;
+  border: none;
+  padding: 10px 20px;
+  margin-left: 10px;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.input-area button:hover {
+  background-color: #0e8e6c;
+}

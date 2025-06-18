@@ -1,0 +1,103 @@
+/* auth.css */
+
+* {
+  box-sizing: border-box;
+}
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: #121212;
+  color: #eee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+.auth-container {
+  background: #1e1e2f;
+  padding: 30px 40px;
+  border-radius: 12px;
+  width: 360px;
+  box-shadow: 0 0 15px rgba(16, 163, 127, 0.7);
+}
+.tabs {
+  display: flex;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #10a37f;
+  user-select: none;
+}
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 12px 0;
+  cursor: pointer;
+  font-weight: bold;
+  color: #aaa;
+  border-bottom: 4px solid transparent;
+  transition: all 0.3s ease;
+}
+.tab.active {
+  color: #10a37f;
+  border-color: #10a37f;
+}
+form {
+  display: none;
+  flex-direction: column;
+}
+form.active {
+  display: flex;
+}
+input[type="text"],
+input[type="password"] {
+  background: #2a2a40;
+  border: none;
+  padding: 12px;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  color: #eee;
+  font-size: 14px;
+  transition: background 0.3s ease;
+}
+input[type="text"]:focus,
+input[type="password"]:focus {
+  outline: none;
+  background: #33334d;
+}
+button {
+  background: #10a37f;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+button:hover {
+  background: #0e8c6f;
+}
+.switch-link {
+  margin-top: 12px;
+  font-size: 14px;
+  color: #aaa;
+  text-align: center;
+}
+.switch-link a {
+  color: #10a37f;
+  cursor: pointer;
+  text-decoration: none;
+}
+.switch-link a:hover {
+  text-decoration: underline;
+}
+.error-msg {
+  background: #ff4d4d;
+  padding: 10px;
+  margin-bottom: 16px;
+  border-radius: 6px;
+  text-align: center;
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+}

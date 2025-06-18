@@ -1,0 +1,107 @@
+<!-- templates/dashboard.html -->
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <title>对话页面</title>
+  <style>
+    /* ... 省略原来样式 ... */
+    .sidebar {
+      width: 240px;
+      background-color: #202123;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    .sidebar button {
+      background-color: #444654;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      text-align: center;
+      font-weight: bold;
+      font-size: 16px;
+    }
+    .sidebar button:hover {
+      background-color: #565869;
+    }
+    .chat-list {
+      flex-grow: 1;
+      overflow-y: auto;
+      margin-top: 10px;
+    }
+    .chat-item {
+      padding: 8px 12px;
+      border-radius: 6px;
+      margin-bottom: 6px;
+      cursor: pointer;
+      color: #ccc;
+      text-decoration: none;
+      display: block;
+    }
+    .chat-item:hover {
+      background-color: #333;
+      color: white;
+    }
+    .chat-item.active {
+      background-color: #10a37f;
+      color: white;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <div class="sidebar">
+      <h2>你好，{{ username }}</h2>
+
+      <!-- 新对话按钮 -->
+      <form method="POST" style="margin: 0;">
+        <button type="submit" name="new_chat">+ 新对话</button>
+      </form>
+
+      <!-- 对话列表 -->
+      <div class="chat-list">
+        {% for conv in conversations %}
+          <a href="{{ url_for('dashboard', conversation_id=conv['id']) }}"
+             class="chat-item {% if conv['id'] == current_conversation['id'] %}active{% endif %}">
+            {{ conv['title'] or '未命名对话' }}
+          </a>
+        {% else %}
+          <p style="color: #666;">暂无对话，点击“新对话”开始。</p>
+        {% endfor %}
+      </div>
+
+      <a href="{{ url_for('logout') }}" style="margin-top: auto; color: #999;">退出登录</a>
+    </div>
+
+    <div class="main">
+      <div class="chat-box" id="chat-box">
+        {% for i in range(texts|length) %}
+          {% if i % 2 == 0 %}
+            <div class="bubble user-msg">我：{{ texts[i]['content'] }}</div>
+          {% else %}
+            <div class="bubble bot-msg">系统：{{ texts[i]['content'] }}</div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      <form class="input-area" method="POST" action="{{ url_for('dashboard', conversation_id=current_conversation['id']) }}">
+        <input type="text" name="user_input" placeholder="请输入你的消息..." autocomplete="off" required />
+        <button type="submit">发送</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    window.onload = function () {
+      const chatBox = document.getElementById("chat-box");
+      chatBox.scrollTop = chatBox.scrollHeight;
+    };
+  </script>
+</body>
+</html>
