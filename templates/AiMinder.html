@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <title>AiMinder</title>
+  <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body, html {
+      height: 100%;
+      margin: 0;
+      background: #f0f2f5;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      overflow: hidden;
+    }
+    #container {
+      display: flex;
+      height: 100vh;
+      width: 100vw;
+    }
+    #chat-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid #ddd;
+      background: #fff;
+      padding: 16px;
+    }
+    #chat {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 10px;
+      background: #fafafa;
+      border-radius: 8px;
+      box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
+    }
+    .chat-message {
+      width: 100%;
+      padding: 12px 16px;
+      margin: 8px 0;
+      border-radius: 20px;
+      word-wrap: break-word;
+      line-height: 1.4;
+      font-size: 15px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .chat-user { background: #d0e6ff; }
+    .chat-ai { background: #ececec; }
+    #input-area {
+      margin-top: 12px;
+      display: flex;
+      gap: 8px;
+    }
+    #message-input {
+      flex: 1;
+      font-size: 16px;
+      padding: 10px 14px;
+      border-radius: 20px;
+      border: 1px solid #ccc;
+      outline: none;
+    }
+    #send-btn {
+      background-color: #3a8ee6;
+      border: none;
+      color: white;
+      padding: 0 20px;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+    #right-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+      padding: 16px;
+    }
+    #large-box {
+      flex: 1;
+      background: #2e4b3a;         
+      border-radius: 8px;
+      border: 1px solid #1c2d23;   
+      padding: 16px;
+      overflow-y: auto;
+      font-family: 'Indie Flower', cursive;
+      white-space: pre-wrap;
+      font-size: 20px;              
+      color: #e0e0e0;              
+      font-weight: bold;            
+    }
+    #btn-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    #btn-group button {
+      padding: 6px 10px;
+      font-size: 14px;
+      border-radius: 16px;
+      border: none;
+      cursor: pointer;
+    }
+    #upload-summarize {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+    }
+ /* loader点动画保持 */
+    .loader-dots {
+      display: inline-flex;
+      align-items: center;
+      font-size: 18px;
+    }
+    .loader-dot {
+      margin: 0 2px;
+      opacity: 0.3;
+      animation: blink 1s infinite;
+    }
+    .loader-dot:nth-child(1) { animation-delay: 0s; }
+    .loader-dot:nth-child(2) { animation-delay: 0.2s; }
+    .loader-dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes blink {
+      0%, 80%, 100% { opacity: 0.3; }
+      40% { opacity: 1; }
+    }
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #fff;
+  border-top: 2px solid #3a8ee6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg);}
+  100% { transform: rotate(360deg);}
+}
+#upload-summarize {
+  display: flex;
+  justify-content: center; /* 水平居中 */
+  gap: 12px;               /* 按钮之间的间距 */
+  margin-top: 12px;
+}
+
+/* 通用按钮样式 */
+#btn-group button,
+#upload-summarize button {
+  padding: 6px 10px;
+  font-size: 13px;
+  border-radius: 16px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  transition: background-color 0.3s;
+}
+
+/* 橙色：上一个板书 */
+#prev-btn {
+  background-color: #f0ad4e;
+  color: white;
+}
+#prev-btn:hover {
+  background-color: #ec971f;
+}
+
+/* 蓝色：下一个板书 */
+#next-btn {
+  background-color: #5bc0de;
+  color: white;
+}
+#next-btn:hover {
+  background-color: #31b0d5;
+}
+
+/* 绿色：一键板书 */
+#summarize-btn {
+  background-color: #5cb85c;
+  color: white;
+}
+#summarize-btn:hover {
+  background-color: #449d44;
+}
+
+
+  </style>
+</head>
+<body>
+  <div id="container">
+    <section id="chat-section">
+      <div id="chat"></div>
+      <div id="input-area">
+        <input type="text" id="message-input" placeholder="输入您需要学习的内容..." autocomplete="off" />
+        <button id="send-btn">发送</button>
+      </div>
+    </section>
+    <section id="right-section">
+      <div id="large-box">暂无内容</div>
+      <div id="btn-group">
+       <button id="prev-btn">上一个板书</button>
+  <button id="next-btn">下一个板书</button>
+      </div>
+   
+<div id="upload-summarize">
+  <button id="custom-upload-btn">上传教材</button>
+  <input type="file" id="file-input" style="display:none;" />
+  <button id="summarize-btn">
+    <span class="spinner" style="display:none;"></span>
+    一键板书
+  </button>
+</div>
+
+
+    </section>
+  </div>
+
+<script>
+const sendBtn = document.getElementById('send-btn');
+const input = document.getElementById('message-input');
+const chat = document.getElementById('chat');
+const largeBox = document.getElementById('large-box');
+const prevBtn = document.getElementById('prev-btn');
+const nextBtn = document.getElementById('next-btn');
+const summarizeBtn = document.getElementById('summarize-btn');
+const fileInput = document.getElementById('file-input');
+
+let history = [];
+let currentIndex = -1;
+
+// ---- 左边聊天历史加载----
+window.addEventListener('load', () => {
+  fetch('/get_historyaiminder')
+    .then(response => response.json())
+    .then(data => {
+      if (data && data.length > 0) {
+        let lastUserInput = "";
+        for (let i = 0; i < data.length; i++) {
+          const item = data[i];
+          if (item.role === 'user') {
+            lastUserInput = item.content;
+            const userDiv = document.createElement('div');
+            userDiv.className = "chat-message chat-user";
+            userDiv.innerHTML = `<strong>我：</strong>${item.content}`;
+            chat.appendChild(userDiv);
+          } else if (item.role === 'assistant') {
+            const content = JSON.parse(item.content);
+            const aiDiv = document.createElement('div');
+            aiDiv.className = "chat-message chat-ai";
+            const formatted = content.text.replace(/\n/g, "<br>");
+            aiDiv.innerHTML = `<strong>AiMinder：</strong>${formatted}`;
+            chat.appendChild(aiDiv);
+            history.push({input: lastUserInput, reply: content.text});
+          }
+        }
+        currentIndex = history.length - 1;
+        setTimeout(() => {
+        chat.scrollTop = chat.scrollHeight;
+      }, 100);
+      }
+    });
+
+  loadSummaries();
+});
+
+sendBtn.addEventListener('click', () => {
+  const message = input.value.trim();
+  if (!message) return;
+  
+  input.value = '';
+
+  // 用户消息
+  const userDiv = document.createElement('div');
+  userDiv.className = "chat-message chat-user";
+  userDiv.innerHTML = `<strong>我：</strong>${message}`;
+  chat.appendChild(userDiv);
+  chat.scrollTop = chat.scrollHeight;
+
+  // AI正在思考
+  const thinkingDiv = document.createElement('div');
+  thinkingDiv.className = "chat-message chat-ai";
+  thinkingDiv.innerHTML = `
+    <strong>AiMinder：</strong>
+    <span class="loader-dots">
+      <span class="loader-dot">●</span>
+      <span class="loader-dot">●</span>
+      <span class="loader-dot">●</span>
+    </span>
+    <br>
+    <span class="waiting-time">正在思考中，预计等待30s，已经思考0s</span>
+    <br>
+     <span class="tips-text"></span>
+  `;
+  chat.appendChild(thinkingDiv);
+  chat.scrollTop = chat.scrollHeight;
+
+  const waitingTimeSpan = thinkingDiv.querySelector('.waiting-time');
+
+
+ const tipsSpan = thinkingDiv.querySelector('.tips-text');
+  const tips = [
+   "让我们利用碎片化时间巩固知识：\n 🤖 机器人的运动学与动力学建模是结构设计的基础。",
+
+"让我们利用碎片化时间巩固知识：\n 🤖 机器人的关节类型主要包括旋转关节和移动关节。",
+
+"让我们利用碎片化时间巩固知识：\n 🤖 模块化机器人设计能提高灵活性与适应性。",
+
+"让我们利用碎片化时间巩固知识：\n 🤖 机器人末端执行器的选择要根据任务特性决定。",
+
+"让我们利用碎片化时间巩固知识：\n 🤖 差速驱动常用于两轮移动机器人。",
+
+"让我们利用碎片化时间巩固知识：\n 🤖 多自由度机械臂需要求解逆运动学以确定关节角度。",
+
+"让我们利用碎片化时间巩固知识：\n 🤖 常见的机器人材料包括铝合金、碳纤维和工程塑料。",
+
+"让我们利用碎片化时间巩固知识：\n 🤖 伺服电机与步进电机是机器人关节常用的驱动方式。",
+
+"让我们利用碎片化时间巩固知识：\n 🤖 运动规划算法如A*和RRT用于路径生成。",
+
+"让我们利用碎片化时间巩固知识：\n 🤖 机器人控制分为开环控制和闭环控制。",
+
+"让我们利用碎片化时间巩固知识：\n 🤖 SLAM技术让移动机器人实现自主定位与地图构建。",
+
+"让我们利用碎片化时间巩固知识：\n 🤖 柔性驱动可以提升机器人在复杂环境下的适应能力。",
+
+"让我们利用碎片化时间巩固知识：\n 🤖 机器人感知系统包括激光雷达、摄像头和超声波传感器。",
+
+"让我们利用碎片化时间巩固知识：\n 🤖 冗余机械臂可通过优化提高作业稳定性。",
+
+"让我们利用碎片化时间巩固知识：\n 🤖 智能算法可以根据任务动态调整结构参数。",
+
+"让我们利用碎片化时间巩固知识：\n 🤖 仿生机器人通过模仿自然界生物实现复杂运动。",
+
+"让我们利用碎片化时间巩固知识：\n 🤖 六足机器人具有良好的越障能力和稳定性。",
+
+"让我们利用碎片化时间巩固知识：\n 🤖 四足机器人在动态步态规划中需考虑足端接触力。",
+
+"让我们利用碎片化时间巩固知识：\n 🤖 机器人的闭环控制依赖传感器反馈精确修正动作。",
+
+"让我们利用碎片化时间巩固知识：\n 🤖 快速原型开发可以显著缩短机器人设计周期。",
+
+"让我们利用碎片化时间巩固知识：\n 🤖 仿真平台如Gazebo和Webots常用于验证控制算法。",
+
+"让我们利用碎片化时间巩固知识：\n 🤖 机器视觉用于识别、定位和跟踪目标物体。",
+
+"让我们利用碎片化时间巩固知识：\n 🤖 多机器人协作系统可提升作业效率和系统鲁棒性。",
+
+"让我们利用碎片化时间巩固知识：\n 🤖 基于深度学习的感知系统能实现更强的环境理解能力。",
+
+"让我们利用碎片化时间巩固知识：\n 🤖 动力学建模需考虑摩擦、惯性和关节弹性等因素。",
+  ];
+  let tipIndex = 0;
+
+
+  let seconds = 0;
+  const timer = setInterval(() => {
+    seconds++;
+    waitingTimeSpan.textContent = `正在思考中，预计等待30s，已经思考${seconds}s`;
+    chat.scrollTop = chat.scrollHeight;
+  }, 1000);
+
+
+// 每4秒更新提示
+tipsSpan.innerHTML = tips[tipIndex].replace(/\n/g, "<br>");
+const tipsTimer = setInterval(() => {
+  tipIndex = (tipIndex + 1) % tips.length;
+  tipsSpan.innerHTML = tips[tipIndex].replace(/\n/g, "<br>");
+  chat.scrollTop = chat.scrollHeight;
+}, 4000);
+
+
+  fetch('/chataiminder', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({message: message})
+  })
+  .then(response => response.json())
+  .then(data => {
+    clearInterval(timer);
+    thinkingDiv.remove();
+
+    const aiDiv = document.createElement('div');
+    aiDiv.className = "chat-message chat-ai";
+    aiDiv.innerHTML = `<strong>AiMinder：</strong><span></span>`;
+    const typingSpan = aiDiv.querySelector('span');
+    chat.appendChild(aiDiv);
+    chat.scrollTop = chat.scrollHeight;
+
+    let i = 0;
+    let buffer = "";
+    function typeWriter() {
+      if (i < data.reply.length) {
+        const char = data.reply.charAt(i);
+        buffer += (char === "\n") ? "<br>" : char;
+        typingSpan.innerHTML = buffer;
+        i++;
+        setTimeout(typeWriter, 5);
+        chat.scrollTop = chat.scrollHeight;
+      }
+    }
+    typeWriter();
+
+    history.push({
+      input: message,
+      reply: data.reply,
+      image_url: data.image_url,
+      code: data.code
+    });
+    currentIndex = history.length - 1;
+
+    input.value = '';
+  });
+});
+
+// ------- 右边总结相关变量 -------
+let summaries = [];               // 存总结
+let currentSummaryIndex = -1;     // 当前总结索引
+
+function loadSummaries() {
+  fetch('/get_summaries')
+    .then(response => response.json())
+    .then(data => {
+      summaries = data;
+      if (summaries.length > 0) {
+        currentSummaryIndex = summaries.length - 1;
+        showCurrentSummary();
+      } else {
+        currentSummaryIndex = -1;
+        largeBox.textContent = "暂无内容";
+      }
+    });
+}
+
+function showCurrentSummary() {
+  if (currentSummaryIndex >= 0 && currentSummaryIndex < summaries.length) {
+    largeBox.textContent = summaries[currentSummaryIndex].content;
+  } else {
+    largeBox.textContent = "暂无内容";
+  }
+  largeBox.scrollTop = 0;
+}
+
+prevBtn.addEventListener('click', () => {
+  if (summaries.length === 0) {
+    largeBox.textContent = "暂无内容";
+    return;
+  }
+  if (currentSummaryIndex > 0) {
+    currentSummaryIndex--;
+    showCurrentSummary();
+  } else {
+    alert("已经是最早的板书！");
+  }
+});
+
+nextBtn.addEventListener('click', () => {
+  if (summaries.length === 0) {
+    largeBox.textContent = "暂无内容";
+    return;
+  }
+  if (currentSummaryIndex < summaries.length - 1) {
+    currentSummaryIndex++;
+    showCurrentSummary();
+  } else {
+    alert("已经是最新的板书！");
+  }
+});
+
+
+const spinner = summarizeBtn.querySelector('.spinner');
+
+summarizeBtn.addEventListener('click', () => {
+  spinner.style.display = 'inline-block';
+  summarizeBtn.disabled = true;
+  largeBox.textContent = "正在总结并板书，请稍候...";
+
+  fetch('/summarize')
+    .then(response => response.json())
+    .then(data => {
+      alert(data.message || "板书已生成！");
+      // 重新加载总结列表，自动更新 summaries 数组和索引
+      return fetch('/get_summaries');
+    })
+    .then(response => response.json())
+    .then(data => {
+      summaries = data;  // **更新 summaries 数组**
+      if (summaries.length > 0) {
+        currentSummaryIndex = summaries.length - 1;  // **指向最新总结**
+        showCurrentSummary();  // 显示最新总结
+      } else {
+        currentSummaryIndex = -1;
+        largeBox.textContent = "暂无内容";
+      }
+    })
+    .catch(err => {
+      largeBox.textContent = "生成失败，请重试";
+      console.error(err);
+    })
+    .finally(() => {
+      spinner.style.display = 'none';
+      summarizeBtn.disabled = false;
+    });
+});
+
+
+fileInput.addEventListener('change', () => {
+  const file = fileInput.files[0];
+  if (file) {
+    const formData = new FormData();
+    formData.append('file', file);
+    fetch('/upload', { method: 'POST', body: formData })
+    .then(response => response.json())
+    .then(data => {
+      alert(data.message);
+    });
+  }
+});
+
+const customUploadBtn = document.getElementById('custom-upload-btn');
+customUploadBtn.addEventListener('click', () => {
+  fileInput.click();
+});
+
+
+input.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') sendBtn.click();
+});
+</script>
+</body>
+</html>

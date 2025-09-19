@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <title>AiBotica</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+<style>
+    /* 全局背景蓝色渐变 */
+    body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background: linear-gradient(135deg, #6fb1fc, #a3d8f4); /* 浅蓝渐变 */
+  }
+
+
+    /* 左上角LOGO */
+    #logo {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      width: 150px;
+      height: auto;
+      object-fit: contain;
+      cursor: pointer;
+      filter: drop-shadow(0 0 5px rgba(0,0,0,0.5));
+      z-index: 100;
+    }
+
+    /* 主体容器 */
+    .main-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      text-align: center;
+      padding: 0 20px;
+      width: 100%;
+      max-width: 900px;
+      margin-top: 40px;
+    }
+
+    /* 大标题 */
+.main-title {
+  font-size: 108px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.95); /* 半透明白 */
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4); /* 加深阴影 */
+  margin-bottom: 10px;
+  }
+
+
+    /* slogan */
+    .slogan {
+      font-size: 36px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.95); /* 半透明白 */
+      margin-bottom: 40px;
+      text-shadow: 0 0 5px rgba(0,0,0,0.3);
+    }
+
+    /* 按钮容器，左右排列 */
+  .button-row {
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  width: 100%;
+  max-width: 900px;
+  flex-wrap: nowrap; /* 不允许换行 */
+  }
+
+    /* 单个按钮 */
+    .nav-btn {
+      background: rgba(58, 142, 230, 0.85);
+      border-radius: 16px;
+      padding: 32px 48px;
+      text-decoration: none;
+      color: white;
+      box-shadow: 0 6px 20px rgba(58, 142, 230, 0.6);
+      flex: 1 1 280px;
+      max-width: 320px;
+      transition: background-color 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+      user-select: none;
+    }
+    .nav-btn:hover {
+      background: #3a8ee6;
+      box-shadow: 0 10px 30px rgba(58, 142, 230, 0.9);
+    }
+
+    /* 按钮内标题部分 */
+    .btn-title {
+      font-size: 28px;
+      font-weight: 900;
+      line-height: 1.2;
+      margin-bottom: 6px;
+    }
+
+    .btn-subtitle {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: #c9d9ff;
+    }
+
+    /* 按钮下面小字说明 */
+    .nav-subtitle {
+      font-size: 18px;
+      color: #bfd1ff;
+      font-weight: 400;
+      line-height: 1.4;
+    }
+#page-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: rgba(20, 30, 70, 0.8);
+  color: white;
+  text-align: center;
+  padding: 4px 0;       /* 减小上下内边距 */
+  font-size: 16px;      /* 字号调小 */
+  font-family: "Arial", sans-serif;
+  z-index: 1000;
+  white-space: nowrap;  /* 避免换行 */
+  overflow: hidden;     /* 防止溢出 */
+  text-overflow: ellipsis; /* 超出显示省略号 */
+}
+
+  </style>
+</head>
+<body>
+
+
+  <!-- Logo 左上角 -->
+  <img id="logo" src="{{ url_for('static', filename='logo.png') }}" alt="Logo" />
+
+  <div class="main-container">
+    <h1 class="main-title">AiBotica</h1>
+    <div class="slogan">AI赋能教育，点燃机器人创意的火花</div>
+
+    <div class="button-row">
+      <a href="/indexjinjie" class="nav-btn">
+        <div class="btn-title">AiMinder</div>
+        <div class="btn-subtitle">知识互动平台</div>
+        <div class="nav-subtitle">实时解答，强化理论学习</div>
+      </a>
+      <a href="/index" class="nav-btn">
+        <div class="btn-title">BotCrafter</div>
+        <div class="btn-subtitle">实践设计平台</div>
+        <div class="nav-subtitle">从创意到实现的无缝过渡</div>
+      </a>
+    </div>
+  </div>
+    
+<footer id="page-footer">
+  <div class="footer-content">
+    团队名称：未界链 &nbsp;&nbsp; 队长：陈 鑫 &nbsp;&nbsp; 队员：张竞天 &nbsp;&nbsp; 指导教师：朱利丰
+  </div>
+</footer>
+
+
+</body>
+</html>
+
